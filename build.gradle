@@ -10,6 +10,9 @@ buildscript {
 }
 
 allprojects {
+    tasks.withType(JavaCompile){
+        options.compilerArgs <<"-Xlint:deprecation"
+    }
     repositories {
         google()
         jcenter()
