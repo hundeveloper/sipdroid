@@ -779,6 +779,7 @@ public class UserAgent extends CallListenerAdapter {
 	}
 
 	/**
+	 * BYE 요청 후 응답 도착 시 호출되는 콜백 함수
 	 * Callback function called when arriving a response after a BYE request
 	 * (call closed)
 	 */
@@ -793,7 +794,9 @@ public class UserAgent extends CallListenerAdapter {
 		changeStatus(UA_STATE_IDLE);
 	}
 
-	/** Callback function called when the invite expires */
+	/**
+	 * 초대가 만료되면 호출되는 콜백 함수
+	 * Callback function called when the invite expires */
 	public void onCallTimeout(Call call) {
 		printLog("onCallTimeout()", LogLevel.LOW);
 		if (call != this.call) {
@@ -813,6 +816,7 @@ public class UserAgent extends CallListenerAdapter {
 	// ****************** ExtendedCall callback functions ******************
 
 	/**
+	 * 새로운 REFER 메소드가 도착할 때 호출되는 콜백 함수(전송
 	 * Callback function called when arriving a new REFER method (transfer
 	 * request)
 	 */
@@ -830,7 +834,8 @@ public class UserAgent extends CallListenerAdapter {
 		call_transfer.call(refer_to.toString(), local_session, null); 		// modified by mandrajg
 	}
 
-	/** Callback function called when a call transfer is accepted. */
+	/** 통화 전달이 수락되면 호출되는 콜백 함수입니다.
+	 * Callback function called when a call transfer is accepted. */
 	public void onCallTransferAccepted(ExtendedCall call, Message resp) {
 		printLog("onCallTransferAccepted()", LogLevel.LOW);
 		if (call != this.call) {
@@ -840,7 +845,8 @@ public class UserAgent extends CallListenerAdapter {
 		printLog("Transfer accepted", LogLevel.HIGH);
 	}
 
-	/** Callback function called when a call transfer is refused. */
+	/** 전화 연결이 거부될 때 호출되는 콜백 함수입니다.
+	 * Callback function called when a call transfer is refused. */
 	public void onCallTransferRefused(ExtendedCall call, String reason,
 			Message resp) {
 		printLog("onCallTransferRefused()", LogLevel.LOW);
@@ -851,7 +857,10 @@ public class UserAgent extends CallListenerAdapter {
 		printLog("Transfer refused", LogLevel.HIGH);
 	}
 
-	/** Callback function called when a call transfer is successfully completed */
+	/**
+	 * 통화 연결이 성공적으로 완료되면 호출되는 콜백 함수
+	 * Callback function called when a call transfer is successfully completed
+	 * */
 	public void onCallTransferSuccess(ExtendedCall call, Message notify) {
 		printLog("onCallTransferSuccess()", LogLevel.LOW);
 		if (call != this.call) {
@@ -864,6 +873,7 @@ public class UserAgent extends CallListenerAdapter {
 
 	/**
 	 * Callback function called when a call transfer is NOT sucessfully
+	 * 통화 연결이 실패했을 때 호출되는 콜백 함수
 	 * completed
 	 */
 	public void onCallTransferFailure(ExtendedCall call, String reason,

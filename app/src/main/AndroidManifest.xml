@@ -1,31 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
- * Copyright (C) 2009 The Sipdroid Open Source Project
- * 
- * This file is part of Sipdroid (http://www.sipdroid.org)
- * 
- * Sipdroid is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This source code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this source code; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-/////////////////////////////////////////////////////////////////////
-// these are the main definitions of Sipdroid
-// for modifying them additional terms according to section 7, GPL apply
-// see ADDITIONAL_TERMS.txt
-/////////////////////////////////////////////////////////////////////
- -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.sipdroid.sipua"
-    android:versionName="6.3 beta"
+	android:versionName="6.3 beta"
     android:versionCode="136"
     android:installLocation="auto">
 	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="31"/>
@@ -38,7 +14,8 @@
 	<uses-feature android:name="android.hardware.telephony" android:required="false"/>
 	<uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
 	<uses-feature android:name="android.hardware.wifi" android:required="false"/>
-	<application android:icon="@drawable/icon64" android:label="@string/app_name" android:theme="@android:style/Theme.Holo">
+	<application android:icon="@drawable/icon64" android:label="@string/app_name" android:theme="@android:style/Theme.Holo"
+		android:name="com.ntrobotics.callproject.NtApplication">
         <activity android:name="org.sipdroid.sipua.ui.Sipdroid" android:label="@string/app_name" android:launchMode="singleInstance"
         	android:exported="true" android:configChanges="orientation|keyboardHidden" android:showWhenLocked="true" android:showOnLockScreen="true">
             <intent-filter>
@@ -92,6 +69,11 @@
 			    <data android:mimeType="vnd.android.cursor.item/name" />			    
 			</intent-filter>
         </activity>
+
+		<activity
+			android:name="org.sipdroid.sipua.ui.AfterActivity"
+			android:exported="true" />
+
         <activity android:name="org.sipdroid.sipua.ui.Activity2" android:label="@string/app_name"
         	android:excludeFromRecents="true" android:taskAffinity=""/>
         <activity android:name="org.sipdroid.sipua.ui.Settings" android:label="@string/app_name"
@@ -109,7 +91,7 @@
 	    <receiver android:name=".ui.OneShotAlarm" android:label="@string/app_name"/>
 	    <receiver android:name=".ui.OneShotAlarm2" android:label="@string/app_name"/>
 	    <receiver android:name=".ui.LoopAlarm" android:label="@string/app_name"/>
-	    <receiver android:name=".ui.OwnWifi" android:label="@string/app_name"/>
+<!--	    <receiver android:name=".ui.OwnWifi" android:label="@string/app_name"/>-->
 	    <receiver android:name=".ui.Caller" android:label="@string/app_name" android:exported="true" >
 	        <intent-filter android:priority="-1">
 	        	<action android:name="android.intent.action.NEW_OUTGOING_CALL" />

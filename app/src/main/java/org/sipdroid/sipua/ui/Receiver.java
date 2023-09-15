@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -41,30 +40,23 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.NetworkInfo.DetailedState;
-import android.net.wifi.ScanResult;
-import android.net.wifi.SupplicantState;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.os.StrictMode;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -73,6 +65,8 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import com.ntrobotics.MyLogSupport;
 
 import org.sipdroid.media.Bluetooth;
 import org.sipdroid.media.RtpStreamReceiver;
@@ -180,6 +174,9 @@ import org.zoolu.sip.provider.SipProvider;
 				if (state != UserAgent.UA_STATE_IDLE)
 					call_end_reason = -1;
 				call_state = state;
+
+				MyLogSupport.log_print("call_state -> "+ call_state );
+
 				switch(call_state)
 				{
 				case UserAgent.UA_STATE_INCOMING_CALL:
@@ -233,6 +230,8 @@ import org.zoolu.sip.provider.SipProvider;
 		        	Checkin.checkin(true);
 					break;
 				case UserAgent.UA_STATE_OUTGOING_CALL:
+					MyLogSupport.log_print("전화걸기 start");
+
 					RtpStreamReceiver.good = RtpStreamReceiver.lost = RtpStreamReceiver.loss = RtpStreamReceiver.late = 0;
 					RtpStreamReceiver.speakermode = speakermode();
 					bluetooth = -1;

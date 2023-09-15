@@ -28,7 +28,7 @@ import org.sipdroid.media.RtpStreamReceiver;
 import org.sipdroid.sipua.R;
 import org.sipdroid.sipua.SipdroidEngine;
 import org.zoolu.sip.provider.SipStack;
-import android.Manifest;
+
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -36,7 +36,6 @@ import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -48,6 +47,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.ntrobotics.MyLogSupport;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener, OnClickListener {
 	// Current settings handler
@@ -395,19 +396,20 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
     }
 
     public static String getProfileNameString(SharedPreferences s) {
-    	String provider = s.getString(PREF_SERVER, DEFAULT_SERVER);
+    	String provider = s.getString(PREF_SERVER, DEFAULT_SERVER); // TODO : server_ip
 
     	if (! s.getString(PREF_DOMAIN, "").equals("")) {
-    		provider = s.getString(PREF_DOMAIN, DEFAULT_DOMAIN);
+    		provider = s.getString(PREF_DOMAIN, DEFAULT_DOMAIN); // TODO : Domain이 존재하면
     	}
 
-    	return s.getString(PREF_USERNAME, DEFAULT_USERNAME) + "@" + provider;
+    	return s.getString(PREF_USERNAME, DEFAULT_USERNAME) + "@" + provider; // TODO : 계정 @ server or domain
     }
 
     private void exportSettings() {
 		if (! settings.getString(PREF_USERNAME, "").equals("") && ! settings.getString(PREF_SERVER, "").equals(""))
 	        try {
 	        	// Copy shared preference file
+				MyLogSupport.log_print("초기서버설정 go");
 	        	copyFile(new File(sharedPrefsPath + sharedPrefsFile + ".xml"), new File(sharedPrefsPath + getProfileNameString()));
 	        } catch (Exception e) {
 	        	e.printStackTrace();
@@ -489,15 +491,17 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 
     @TargetApi(23)
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    	if (!Thread.currentThread().getName().equals("main"))
-    		return;
-        	
-		if (key.startsWith(PREF_PORT) && sharedPreferences.getString(key, DEFAULT_PORT).equals("0")) {
-	   		Editor edit = sharedPreferences.edit();
-    		edit.putString(key, DEFAULT_PORT);
-    		edit.commit();
+		MyLogSupport.log_print("onSharedPreferenceChanged() key : " + key);
+		if (!Thread.currentThread().getName().equals("main"))
+			return;
 
-    		transferText = new InstantAutoCompleteTextView(this,null);
+		if (key.startsWith(PREF_PORT) && sharedPreferences.getString(key, DEFAULT_PORT).equals("0")) {
+			MyLogSupport.log_print("PORT가 0일경우 이 조건문 실행");
+			Editor edit = sharedPreferences.edit();
+			edit.putString(key, DEFAULT_PORT);
+			edit.commit();
+
+			transferText = new InstantAutoCompleteTextView(this,null);
 			transferText.setInputType(InputType.TYPE_CLASS_NUMBER);
 			mKey = key;
 
@@ -508,6 +512,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 			.show();
 			return;
 		} else if (key.startsWith(PREF_SERVER) || key.startsWith(PREF_PROTOCOL)) {
+			MyLogSupport.log_print("SERVER이거나 PROTOCOL설정일때");
     		Editor edit = sharedPreferences.edit();
     		for (int i = 0; i < SipdroidEngine.LINES; i++) {
     			edit.putString(PREF_DNS+i, DEFAULT_DNS);
@@ -532,7 +537,9 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         	Receiver.engine(this).updateDNS();
         	Checkin.checkin(false);
         } else if (sharedPreferences.getBoolean(PREF_CALLBACK, DEFAULT_CALLBACK) && sharedPreferences.getBoolean(PREF_CALLTHRU, DEFAULT_CALLTHRU)) {
-    		CheckBoxPreference cb = (CheckBoxPreference) getPreferenceScreen().findPreference(key.equals(PREF_CALLBACK) ? PREF_CALLTHRU : PREF_CALLBACK);
+			MyLogSupport.log_print("CALLBACK or CALLTHRU설정일때");
+
+			CheckBoxPreference cb = (CheckBoxPreference) getPreferenceScreen().findPreference(key.equals(PREF_CALLBACK) ? PREF_CALLTHRU : PREF_CALLBACK);
     		cb.setChecked(false);
 	    } else if (key.startsWith(PREF_WLAN) ||
         			key.startsWith(PREF_3G) ||
@@ -554,7 +561,8 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         			key.equals(PREF_AUTO_ONDEMAND) ||
         			key.equals(PREF_MWI_ENABLED) ||
         			key.equals(PREF_KEEPON)) {
-        	Receiver.engine(this).halt();
+			MyLogSupport.log_print("설정값: USERNAME,PASSWORD,DOMAIN, SERVER, WLAN ... 사용자가 올바르게 설정할때");
+			Receiver.engine(this).halt();
     		Receiver.engine(this).StartEngine();
 		}
 		updateSummaries();
@@ -579,6 +587,7 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
        		String j = (i!=0?""+i:"");
        		String username = settings.getString(PREF_USERNAME+j, DEFAULT_USERNAME),
        			server = settings.getString(PREF_SERVER+j, DEFAULT_SERVER);
+
 	    	getPreferenceScreen().findPreference(PREF_USERNAME+j).setSummary(username); 
 	    	getPreferenceScreen().findPreference(PREF_SERVER+j).setSummary(server);
 	    	if (settings.getString(PREF_DOMAIN+j, DEFAULT_DOMAIN).length() == 0) {

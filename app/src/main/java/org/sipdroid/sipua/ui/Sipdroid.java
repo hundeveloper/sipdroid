@@ -21,13 +21,12 @@
 
 package org.sipdroid.sipua.ui;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import org.sipdroid.sipua.R;
 import org.sipdroid.sipua.SipdroidEngine;
 import org.sipdroid.sipua.UserAgent;
-import org.zoolu.tools.Random;
+
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -62,6 +61,8 @@ import android.widget.CursorAdapter;
 import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+
+import com.ntrobotics.MyLogSupport;
 
 /////////////////////////////////////////////////////////////////////
 // this the main activity of Sipdroid
@@ -246,6 +247,7 @@ public class Sipdroid extends Activity implements OnDismissListener {
 		        if (event.getAction() == KeyEvent.ACTION_DOWN &&
 		        		keyCode == KeyEvent.KEYCODE_ENTER) {
 		          call_menu(sip_uri_box2);
+					MyLogSupport.log_print("엔터키클릭");
 		          return true;
 		        }
 		        return false;
@@ -413,24 +415,29 @@ public class Sipdroid extends Activity implements OnDismissListener {
 	void call_menu(AutoCompleteTextView view)
 	{
 		String target = view.getText().toString();
-		if (m_AlertDlg != null) 
+		MyLogSupport.log_print(target);
+		if (m_AlertDlg != null)
 		{
 			m_AlertDlg.cancel();
 		}
-		if (target.length() == 0)
+		if (target.length() == 0) {
+			// 전화번호 입력없을때 출력
 			m_AlertDlg = new AlertDialog.Builder(this)
-				.setMessage(R.string.empty)
-				.setTitle(R.string.app_name)
-				.setIcon(R.drawable.icon22)
-				.setCancelable(true)
-				.show();
-		else if (!Receiver.engine(this).call(target,true))
+					.setMessage(R.string.empty)
+					.setTitle(R.string.app_name)
+					.setIcon(R.drawable.icon22)
+					.setCancelable(true)
+					.show();
+		}
+		else if (!Receiver.engine(this).call(target,true)) {
+			// 전화번호 있을때 출력
 			m_AlertDlg = new AlertDialog.Builder(this)
-				.setMessage(R.string.notfast)
-				.setTitle(R.string.app_name)
-				.setIcon(R.drawable.icon22)
-				.setCancelable(true)
-				.show();
+					.setMessage(R.string.notfast)
+					.setTitle(R.string.app_name)
+					.setIcon(R.drawable.icon22)
+					.setCancelable(true)
+					.show();
+		}
 	}
 	
 	@Override

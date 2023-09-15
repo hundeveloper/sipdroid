@@ -36,6 +36,7 @@ import org.zoolu.sip.address.NameAddress;
 import org.zoolu.sip.provider.SipProvider;
 import org.zoolu.sip.provider.SipStack;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
@@ -44,6 +45,8 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+
+import com.ntrobotics.MyLogSupport;
 
 public class SipdroidEngine implements RegisterAgentListener {
 
@@ -97,9 +100,10 @@ public class SipdroidEngine implements RegisterAgentListener {
 		return user_profile;
 	}
 
+	@SuppressLint("InvalidWakeLockTag")
 	public boolean StartEngine() {
 			PowerManager pm = (PowerManager) getUIContext().getSystemService(Context.POWER_SERVICE);
-			WifiManager wm = (WifiManager) getUIContext().getSystemService(Context.WIFI_SERVICE);
+			WifiManager wm = (WifiManager) getUIContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 			if (wl == null) {
 				if (!PreferenceManager.getDefaultSharedPreferences(getUIContext()).contains(org.sipdroid.sipua.ui.Settings.PREF_KEEPON)) {
 					Editor edit = PreferenceManager.getDefaultSharedPreferences(getUIContext()).edit();
@@ -154,11 +158,9 @@ public class SipdroidEngine implements RegisterAgentListener {
 					user_profile.contact_url = getContactURL(user_profile.username,sip_providers[i]);
 					
 					if (user_profile.from_url.indexOf("@") < 0) {
-						user_profile.from_url +=
-							"@"
-							+ user_profile.realm;
+						user_profile.from_url += "@" + user_profile.realm;
 					}
-					
+
 					CheckEngine();
 					
 					// added by mandrajg
@@ -213,6 +215,7 @@ public class SipdroidEngine implements RegisterAgentListener {
 	public void CheckEngine() {
 		int i = 0;
 		for (SipProvider sip_provider : sip_providers) {
+			MyLogSupport.log_print("메소드 checkEngine() : sip_provider 값 -> " + sip_provider);
 			if (sip_provider != null && !sip_provider.hasOutboundProxy())
 				setOutboundProxy(sip_provider,i);
 			i++;
