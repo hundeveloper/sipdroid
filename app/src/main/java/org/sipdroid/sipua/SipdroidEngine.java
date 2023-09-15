@@ -46,8 +46,6 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
-import com.ntrobotics.MyLogSupport;
-
 public class SipdroidEngine implements RegisterAgentListener {
 
 	public static final int LINES = 2;

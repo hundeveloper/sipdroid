@@ -66,7 +66,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.ntrobotics.MyLogSupport;
+import org.sipdroid.sipua.MyLogSupport;
 
 import org.sipdroid.media.Bluetooth;
 import org.sipdroid.media.RtpStreamReceiver;

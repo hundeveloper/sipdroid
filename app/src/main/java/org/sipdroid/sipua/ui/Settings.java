@@ -48,7 +48,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.ntrobotics.MyLogSupport;
+import org.sipdroid.sipua.MyLogSupport;
 
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener, OnClickListener {
 	// Current settings handler

@@ -62,7 +62,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.ntrobotics.MyLogSupport;
+import org.sipdroid.sipua.MyLogSupport;
 
 /////////////////////////////////////////////////////////////////////
 // this the main activity of Sipdroid
